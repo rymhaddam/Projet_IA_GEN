@@ -54,6 +54,10 @@ def main():
     if args.with_genai:
         print("\nTexte généré (GenAI):")
         print(out["genai_text"])
+        print("\nPlan de progression (GenAI):")
+        print(out["plan_text"])
+        print("\nBio synthétique (GenAI):")
+        print(out["bio_text"])
 
 
 if __name__ == "__main__":

@@ -94,6 +94,7 @@ def run_pipeline_with_generation(
     cache_path allows tests to isolate cache writes.
     """
     from src.genai import CACHE_PATH, generate_with_cache, generate_with_provider
+    from src.genai import generate_explanation, generate_plan, generate_bio
 
     base = run_pipeline(
         answers,
@@ -110,7 +111,11 @@ def run_pipeline_with_generation(
     }
 
     selected_cache = CACHE_PATH if cache_path is None else Path(cache_path)
-    gen_text = generate_with_cache(context, generate_with_provider, cache_path=selected_cache)
+    gen_text = generate_explanation(context, cache_path=selected_cache)
+    plan_text = generate_plan(context, cache_path=selected_cache)
+    bio_text = generate_bio(context, cache_path=selected_cache)
 
     base["genai_text"] = gen_text
+    base["plan_text"] = plan_text
+    base["bio_text"] = bio_text
     return base

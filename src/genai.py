@@ -139,6 +139,28 @@ def default_prompt(context: Dict[str, Any]) -> str:
     )
 
 
+def plan_prompt(context: Dict[str, Any]) -> str:
+    return (
+        "Tu es un assistant médical. Propose un plan d'action en 3-5 étapes simples pour le patient, "
+        "en te basant uniquement sur les passages du référentiel et les spécialités proposées.\n"
+        f"Texte utilisateur: {context.get('user_text','')}\n"
+        "Passages pertinents:\n" + "\n".join(
+            f"- {getattr(p, 'text', '')}" for p in (context.get("retrieved") or [])
+        )
+    )
+
+
+def bio_prompt(context: Dict[str, Any]) -> str:
+    return (
+        "Rédige une courte bio/fiche patient (3-4 phrases) qui résume la situation, les symptômes clés "
+        "et la spécialité la plus probable, sans diagnostic. Reste factuel.\n"
+        f"Texte utilisateur: {context.get('user_text','')}\n"
+        "Top spécialités: " + ", ".join(
+            str(row["Specialite"]) for _, row in context.get("top3", []).iterrows()
+        )
+    )
+
+
 def gemini_generate(context: Dict[str, Any], model: Optional[str] = None) -> str:
     """
     Provider using Gemini. Requires GOOGLE_API_KEY and google-generativeai installed.
@@ -150,7 +172,7 @@ def gemini_generate(context: Dict[str, Any], model: Optional[str] = None) -> str
     if not api_key:
         raise RuntimeError("GOOGLE_API_KEY not set.")
     genai.configure(api_key=api_key)
-    prompt = default_prompt(context)
+    prompt = context.get("prompt") or default_prompt(context)
     mdl = genai.GenerativeModel(model)
     resp = mdl.generate_content(prompt)
     return resp.text
@@ -162,3 +184,21 @@ def generate_with_provider(context: Dict[str, Any]) -> str:
     """
     model_override = os.getenv("GENAI_MODEL", DEFAULT_MODEL)
     return gemini_generate(context, model=model_override)
+
+
+def generate_explanation(context: Dict[str, Any], cache_path: Path | None = None) -> str:
+    ctx = dict(context)
+    ctx["_kind"] = "explanation"
+    return generate_with_cache(ctx, lambda c: generate_with_provider({**c, "prompt": default_prompt(c)}), cache_path=cache_path or CACHE_PATH)
+
+
+def generate_plan(context: Dict[str, Any], cache_path: Path | None = None) -> str:
+    ctx = dict(context)
+    ctx["_kind"] = "plan"
+    return generate_with_cache(ctx, lambda c: generate_with_provider({**c, "prompt": plan_prompt(c)}), cache_path=cache_path or CACHE_PATH)
+
+
+def generate_bio(context: Dict[str, Any], cache_path: Path | None = None) -> str:
+    ctx = dict(context)
+    ctx["_kind"] = "bio"
+    return generate_with_cache(ctx, lambda c: generate_with_provider({**c, "prompt": bio_prompt(c)}), cache_path=cache_path or CACHE_PATH)

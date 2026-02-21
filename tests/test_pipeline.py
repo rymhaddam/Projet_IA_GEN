@@ -44,5 +44,5 @@ def test_pipeline_with_generation_uses_cache_and_mock(monkeypatch, tmp_path):
 
     assert out1["genai_text"] == "texte généré de test"
     assert out2["genai_text"] == "texte généré de test"
-    # provider should be called only once thanks to cache
-    assert calls["count"] == 1
+    # 3 calls (explanation, plan, bio) on first pass, then cached
+    assert calls["count"] == 3

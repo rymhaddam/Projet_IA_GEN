@@ -4,4 +4,5 @@ pandas
 scikit-learn
 google-generativeai
 faiss-cpu
+streamlit
 pytest

@@ -29,6 +29,11 @@ Tests :
 .venv/bin/python -m pytest -q
 ```
 
+UI Streamlit :
+```bash
+streamlit run app/streamlit_app.py
+```
+
 ## Notes
 - Le provider GenAI est limité à Gemini (modèle par défaut `gemini-2.5-flash`).
 - Le cache des réponses génératives est stocké dans `data/cache_genai.json`.
