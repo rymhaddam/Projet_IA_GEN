@@ -1,0 +1,4 @@
+export GOOGLE_API_KEY="AIzaSyC9BSQo41-jo5Ek_39K2IbEX3O4br_0ATI"
+export GENAI_PROVIDER=gemini
+export GENAI_MODEL=gemini-2.5-flash
+
