@@ -40,8 +40,8 @@ def attach_scores(
     sim_symptomes: np.ndarray,
     sim_indications: np.ndarray,
     numeric_score: float,
-    weight_symptomes: float = 0.6,
-    weight_indications: float = 0.3,
+    weight_symptomes: float = 0.5,
+    weight_indications: float = 0.4,
     weight_numeric: float = 0.1,
 ) -> pd.DataFrame:
     """
