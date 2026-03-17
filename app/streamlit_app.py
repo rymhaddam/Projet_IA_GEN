@@ -519,7 +519,7 @@ with st.sidebar:
     st.markdown(f"""
     <div class="sb-box">
       🤖 <strong>LLM</strong> : <code>{model_name}</code><br>
-      📐 <strong>Embeddings</strong> : <code>all-MiniLM-L6-v2</code><br>
+      📐 <strong>Embeddings</strong> : <code>MedEmbed-base-v0.1</code><br>
       🗂️ <strong>Index</strong> : <code>FAISS cosine</code>
     </div>""", unsafe_allow_html=True)
 

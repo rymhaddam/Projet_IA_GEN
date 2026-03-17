@@ -1,8 +1,10 @@
 """
 SBERT embeddings helpers.
+Embedding model: abhinand/MedEmbed-base-v0.1 (medical-domain optimized).
 """
 from __future__ import annotations
 
+import os
 from functools import lru_cache
 from typing import Iterable, List
 
@@ -10,13 +12,17 @@ import numpy as np
 from sentence_transformers import SentenceTransformer
 
 
-DEFAULT_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
+# MedEmbed-base-v0.1 : modèle d'embeddings spécialisé domaine médical.
+# Overrideable via variable d'environnement EMBEDDING_MODEL.
+DEFAULT_MODEL = os.getenv("EMBEDDING_MODEL", "abhinand/MedEmbed-base-v0.1")
 
 
 @lru_cache(maxsize=1)
 def get_model(model_name: str = DEFAULT_MODEL) -> SentenceTransformer:
     """
-    Load and cache the SBERT model. Uses a tiny model to keep resource usage low.
+    Load and cache the SentenceTransformer model.
+    Default: abhinand/MedEmbed-base-v0.1 (medical-domain optimized embeddings).
+    Overrideable via env var EMBEDDING_MODEL.
     """
     return SentenceTransformer(model_name)
 

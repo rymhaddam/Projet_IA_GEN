@@ -32,7 +32,7 @@ def load_medical_referential(path: str | Path) -> pd.DataFrame:
     csv_path = Path(path)
     if not csv_path.exists():
         raise FileNotFoundError(f"Referential not found at {csv_path}")
-    df = pd.read_csv(csv_path)
+    df = pd.read_csv(csv_path, encoding='utf-8', on_bad_lines='skip')
     missing = _missing_columns(df, REQUIRED_COLUMNS)
     if missing:
         raise ValueError(f"Missing required columns in referential: {missing}")
